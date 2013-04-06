@@ -1,8 +1,3 @@
-// This sketch is based on examples from http://www.ladyada.net/learn/breakoutplus/ds1307rtc.html
-// Date and time functions using a DS1307 RTC connected via I2C and Wire lib
-#include <Wire.h>
-#include "RTClib.h"
-
 // The purpose of this circuit is to prevent the hot tub
 // from turning on its heater during peak hours
 // when the electric rate is doubled. $$$.
@@ -11,11 +6,19 @@
 // During the winter (October 1 through May 31), 
 // the peak period is on non-holiday weekdays from 4 p.m. to 9 p.m.
 
+// This sketch is based on examples from 
+// http://www.ladyada.net/learn/breakoutplus/ds1307rtc.html
+// Date and time functions using a DS1307 RTC connected via I2C and Wire lib
+#include <Wire.h>
+#include "RTClib.h"
+
 RTC_DS1307 RTC;
 const int RTCgnd = 16; // analog 2
 const int RTC5v = 17; // analog 3
 const int RELAYpin = 3; // digital 3, for activating the relay
 const boolean DEBUG = false;
+const int peak_hours_start = 16
+const int peak_hours_end = 21
 
 void setup () {
     
@@ -62,7 +65,7 @@ void loop () {
         // during the winter peak hours are 5-9pm
         // Switch the relay to the Normally Open leg
         // (fixed resistor value for 104 degrees F)
-        if (t.hour() >= 17 && t.hour() < 21 ) {
+        if (t.hour() >= peak_hours_start && t.hour() < peak_hours_end ) {
             if (DEBUG) {
                 Serial.println("Peak time.");
             }
@@ -82,6 +85,6 @@ void loop () {
         digitalWrite(RELAYpin, LOW);
     }
  
-    // no need to be super precise
+    // no need to be super precise. wait a minute.
     delay(60000);
 }
